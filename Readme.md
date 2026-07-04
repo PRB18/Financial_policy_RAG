@@ -14,6 +14,6 @@
 2. activate the virtual environment
 3. Clone the repo
 4. `pip install -r requirements.txt`
-4. python chromaDB.py 
+4. `python chromaDB.py` 
 
 
