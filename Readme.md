@@ -12,7 +12,8 @@
 
 1. create the virtual environment
 2. activate the virtual environment
-3. install the requirements
-4. run the app 
+3. Clone the repo
+4. `pip install -r requirements.txt`
+4. python chromaDB.py 
 
 
