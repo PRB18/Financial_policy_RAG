@@ -1,4 +1,9 @@
 fastapi
+uvicorn
 pydantic
 chromadb
 pypdf
+langchain
+langgraph
+langchain-core
+typing_extensions
