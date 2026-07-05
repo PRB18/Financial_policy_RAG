@@ -1,12 +1,12 @@
-from typing import Annotated, Sequence
-from typing_extensions import TypedDict
-from langchain_core.messages import BaseMessage
+from typing import Annotated, Sequence, TypedDict
+import operator
+from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import StateGraph, END
 
 #this is the "state"
 #it stores messages list and context
 class AgentState(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], "conversation history"]
+    messages: Annotated[Sequence[BaseMessage], "convorsation history"]
 
 
 #this is a "node"
@@ -27,3 +27,21 @@ def comaprision(state: AgentState):
     return {"messages": state["messages"]}
 
 
+workflow = StateGraph(AgentState)
+
+workflow.add_node("retrieve", retrirve_from_db)
+workflow.add_node("live_search", live_search)
+workflow.add_node("compare", comaprision)
+
+workflow.set_entry_point("retrieve")
+workflow.add_edge("retrieve", "live_search")
+workflow.add_edge("live_search", "compare")
+workflow.add_edge("compare", END)
+
+agent = workflow.compile()
+print("Graph compiled successfully")
+
+result = agent.invoke({
+    "messages": [HumanMessage(content="What is the current repo rate?")]
+})
+print(result)
