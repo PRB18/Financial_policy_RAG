@@ -1,5 +1,7 @@
-from typing import TypedDict, Annotated, Sequence
+from typing import Annotated, Sequence
+from typing_extensions import TypedDict
 from langchain_core.messages import BaseMessage
+from langgraph.graph import StateGraph, END
 
 #this is the "state"
 #it stores messages list and context
@@ -23,3 +25,5 @@ def live_search(state: AgentState):
 def comaprision(state: AgentState):
     print("Comparing static and live data...")
     return {"messages": state["messages"]}
+
+
