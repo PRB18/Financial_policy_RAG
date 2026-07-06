@@ -63,3 +63,7 @@ curl -X POST http://127.0.0.1:8000/query \
 - node3 : compares the static storage and the live search results
 - the graph is compiled and run well until now
 
+## Progress so far
+
+- the agent retrieves and gives the output but live search and comparision is still not added
+- the query is hardcoded for now, later will be connected with fastapi and the query will be taken from  the user
