@@ -67,3 +67,5 @@ curl -X POST http://127.0.0.1:8000/query \
 
 - the agent retrieves and gives the output but live search and comparision is still not added
 - the query is hardcoded for now, later will be connected with fastapi and the query will be taken from  the user
+- llm will be added later 
+- the result should be more accurate 
