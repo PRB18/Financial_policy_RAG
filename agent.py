@@ -2,6 +2,7 @@ from typing import Annotated, Sequence, TypedDict
 import operator
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import StateGraph, END
+from chromaDB import collection
 
 #this is the "state"
 #it stores messages list and context
@@ -14,7 +15,13 @@ class AgentState(TypedDict):
 #takes "state" from AgentSate as an input parameter and return the updated state
 def retrirve_from_db(state: AgentState):
     print("retrieving from the chromaDB....")
+    context = collection.query(
+        query_texts = [state["messages"][-1].content],
+        n_results = 2
+    )
+    print("results:",context["documents"])
     return {"messages": state["messages"]}
+
 
 #this node fetches the live data from the internet
 def live_search(state: AgentState):

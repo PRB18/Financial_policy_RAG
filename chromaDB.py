@@ -14,11 +14,3 @@ collection.upsert(
     documents= pages_list
 )
 
-
-#qurying
-results = collection.query(
-    query_texts=["What is the income tax rate for someone earning 10 lakhs?"],
-    n_results=1
-)
-
-print(results)
