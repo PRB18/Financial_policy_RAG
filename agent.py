@@ -15,6 +15,12 @@ class AgentState(TypedDict):
 #takes "state" from AgentSate as an input parameter and return the updated state
 def retrirve_from_db(state: AgentState):
     print("retrieving from the chromaDB....")
+    #imported the chromadb with collections(at line 5) and the query text is the question from the user
+    #this triggers the chromadb to fetch the similar data from the db
+    """ChromaDB uses embeddings — it converts your question into a 
+    vector (list of numbers representing meaning) and finds the chunks in your 
+    knowledge base whose vectors are closest to it mathematically."""
+    #for now the state isnt being updated.
     context = collection.query(
         query_texts = [state["messages"][-1].content],
         n_results = 2
