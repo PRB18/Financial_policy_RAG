@@ -69,4 +69,4 @@ curl -X POST http://127.0.0.1:8000/query \
 - the query is hardcoded for now, later will be connected with fastapi and the query will be taken from  the user
 - llm will be added later 
 - the result should be more accurate.
-- travily will be used to fetch live data. 
+- used travily api to fetch live data.

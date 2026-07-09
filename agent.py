@@ -44,7 +44,10 @@ def live_search(state: AgentState):
     print("Searching the web...")
     web_search_api = os.getenv("LIVE_SEARCH_API")
     client = TavilyClient(web_search_api)
+    #the query text is the question from the user which is stored in the state object 'messages'
     response = client.search(query=state["messages"][-1].content)
+    #the response from travily is returned to the state object 'live_response'
+    #this is list of dictionaries
     return {"live_response" : response["results"]}
 
 #this node comapres the static data from the db with the live data
