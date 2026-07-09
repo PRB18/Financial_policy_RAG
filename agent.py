@@ -3,12 +3,18 @@ import operator
 from langchain_core.messages import BaseMessage, HumanMessage
 from langgraph.graph import StateGraph, END
 from chromaDB import collection
+import os
+from dotenv import load_dotenv
+from tavily import TavilyClient
 
+load_dotenv("travily.env")
 #this is the "state"
 #it stores messages list and context
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], "convorsation history", operator.add]
     context : list[str]
+    live_response : list[dict]
+
 
 
 #this is a "node"
@@ -36,7 +42,10 @@ def retrirve_from_db(state: AgentState):
 #this node fetches the live data from the internet
 def live_search(state: AgentState):
     print("Searching the web...")
-    return {}
+    web_search_api = os.getenv("LIVE_SEARCH_API")
+    client = TavilyClient(web_search_api)
+    response = client.search(query=state["messages"][-1].content)
+    return {"live_response" : response["results"]}
 
 #this node comapres the static data from the db with the live data
 def comaprision(state: AgentState):
