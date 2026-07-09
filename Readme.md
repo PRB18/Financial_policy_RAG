@@ -2,10 +2,10 @@
 
 ## what it does?
 
-- It uses RAG to anser questions related to Indian financial policy.
+- It uses RAG to answer questions related to Indian financial policy.
 - RAG understands the context, compares the static DB and live search results and gives the output.
-- Currently iam using ChromaDB to store the data in-memory.
-- It uses pypdf to extrat the text and send it to ChromaDB to store.
+- Currently using ChromaDB to store the data in-memory.
+- It uses pypdf to extract the text and send it to ChromaDB to store.
 - for now /query endpoint just takes the query from user.
 
 ## tech stack
@@ -15,6 +15,8 @@
 - **ChromaDB** — in-memory vector store
 - **pypdf** — to read and extract text from PDFs
 - **FastAPI + Uvicorn** — for the /query endpoint
+- **Tavily** — for live web search
+- **python-dotenv** — for loading API keys from .env file
 
 ## project structure
 
@@ -56,17 +58,16 @@ curl -X POST http://127.0.0.1:8000/query \
 
 ## What the agent does?
 
-- it consists of a state which stores the conversation history in the form of sequence of list of messages
-- it had 3 node
-- node1: retrieve data from the db
-- node2 : searched the web live
-- node3 : compares the static storage and the live search results
-- the graph is compiled and run well until now
+- it consists of a state with 3 fields: `messages` (conversation history), `context` (ChromaDB results), and `live_response` (Tavily results)
+- it has 3 nodes
+- node1: retrieves data from ChromaDB
+- node2: searches the web live using Tavily
+- node3: compares the static storage and the live search results
+- the graph is compiled and all 3 nodes run successfully
 
 ## Progress so far
 
-- the agent retrieves and gives the output but live search and comparision is still not added
-- the query is hardcoded for now, later will be connected with fastapi and the query will be taken from  the user
-- llm will be added later 
-- the result should be more accurate.
-- used travily api to fetch live data.
+- all 3 nodes are working — ChromaDB retrieval and Tavily live search are both returning results
+- the compare node is still empty — comparison logic and LLM not added yet
+- the query is hardcoded for now, later will be connected with FastAPI
+- LLM will be added to the compare node to generate a final answer
