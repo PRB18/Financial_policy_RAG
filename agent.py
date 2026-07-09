@@ -7,7 +7,7 @@ from chromaDB import collection
 #this is the "state"
 #it stores messages list and context
 class AgentState(TypedDict):
-    messages: Annotated[Sequence[BaseMessage], "convorsation history"]
+    messages: Annotated[Sequence[BaseMessage], "convorsation history", operator.add]
 
 
 #this is a "node"
@@ -25,19 +25,22 @@ def retrirve_from_db(state: AgentState):
         query_texts = [state["messages"][-1].content],
         n_results = 2
     )
-    print("results:",context["documents"])
-    return {"messages": state["messages"]}
+    #print("results:",context["documents"])
+    #updates the state by adding the context["documents"] to the messages list
+    #since we used 'operator.add' in the state definition , it will add the new message to the existing list of messages
+
+    return {"messages": context["documents"]}
 
 
 #this node fetches the live data from the internet
 def live_search(state: AgentState):
     print("Searching the web...")
-    return {"messages": state["messages"]}
+    return {}
 
 #this node comapres the static data from the db with the live data
 def comaprision(state: AgentState):
     print("Comparing static and live data...")
-    return {"messages": state["messages"]}
+    return {}
 
 
 workflow = StateGraph(AgentState)
