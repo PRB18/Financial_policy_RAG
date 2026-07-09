@@ -8,6 +8,7 @@ from chromaDB import collection
 #it stores messages list and context
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], "convorsation history", operator.add]
+    context : list[str]
 
 
 #this is a "node"
@@ -29,7 +30,7 @@ def retrirve_from_db(state: AgentState):
     #updates the state by adding the context["documents"] to the messages list
     #since we used 'operator.add' in the state definition , it will add the new message to the existing list of messages
 
-    return {"messages": context["documents"]}
+    return {"context": context["documents"][0]}
 
 
 #this node fetches the live data from the internet
