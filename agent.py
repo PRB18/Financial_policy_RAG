@@ -6,7 +6,7 @@ from chromaDB import collection
 import os
 from dotenv import load_dotenv
 from tavily import TavilyClient
-import anthropic
+from groq import Groq
 
 load_dotenv("API.env")
 #this is the "state"
@@ -55,28 +55,38 @@ def live_search(state: AgentState):
 #this node comapres the static data from the db with the live data
 def comaprision(state: AgentState):
     print("Comparing static and live data...")
-    anthropic_api = os.getenv("ANTHROPIC_API")
-    client = anthropic.Anthropic(api_key=anthropic_api)
-    message = client.messages.create(
-        model = "claude-3-5-sonnet-20240620",
-        max_tokens= 1024,
+    groq_api = os.getenv("GROQ_API")
+    client = Groq(api_key=groq_api)
+    prompt_text = f"""
+    You are an expert Financial Policy RAG Agent.
+    The user asked: "{state['messages'][-1].content}"
+
+    [SOURCE 1: STATIC OFFICIAL DATABASE]
+    {state['context']}
+
+    [SOURCE 2: LIVE WEB SEARCH]
+    {state['live_response']}
+
+    INSTRUCTIONS:
+    Do not just blindly match text. You must analyze the data from both sources using the following steps:
+    1. Terminology Check: Identify if both sources are talking about the same underlying metric, even if they use different words (e.g., "GST" vs "Goods and Services Tax").
+    2. Fact Extraction: What is the specific number, rate, or rule stated in Source 1? What is it in Source 2?
+    3. Conflict Resolution: Do the facts agree? 
+       - If yes, synthesize a clear answer.
+       - If no (e.g., Source 1 says 6.50% and Source 2 says 5.25%), treat Source 2 as the updated reality. 
+    4. Final Output: State the current correct answer clearly. If there was a conflict, explicitly explain that the official database was outdated and provide the updated live web figure.
+
+    Provide your final, professional answer based on this logic. Do not output your internal thinking steps, just the final response for the user.
+    """
+    chat_compilation = client.chat.completions.create(
         messages=[
-            {"role" : "user", "content" : f"""
-            You are a financial policy assistant. 
-            The user asked: {state['messages'][-1].content}
-
-            Here is the static official data from our database:
-            {state['context']}
-
-            Here is the live search data from the web:
-            {state['live_response']}
-
-            Compare the two. If the static data is outdated (like an old repo rate), explicitly flag the discrepancy and give the user the updated live web data.
-            """}
-        ]
+            { "role" : "user",
+            "content": prompt_text
+            },
+        ],
+        model="llama-3.3-70b-versatile",    
     )
-    return {"comparision_result": message.content[0].text}
-
+    return {"comparision_result" : chat_compilation.choices[0].message.content}
 
 workflow = StateGraph(AgentState)
 
@@ -95,4 +105,12 @@ print("Graph compiled successfully")
 result = agent.invoke({
     "messages": [HumanMessage(content="What is the current repo rate?")]
 })
-print(result)
+print(result["messages"][-1].content)
+print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
+print(result["context"])
+print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
+print(result["live_response"])
+print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
+print(result["comparision_result"])
+
+
