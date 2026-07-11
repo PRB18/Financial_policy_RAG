@@ -104,15 +104,19 @@ workflow.add_edge("compare", END)
 agent = workflow.compile()
 print("Graph compiled successfully")
 
-"""result = agent.invoke({
-    "messages": [HumanMessage(content="What is the fiscal deficit target for FY 2026-27?")]
-})
-print(result["messages"][-1].content)
-print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print(result["context"])
-print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print(result["live_response"])
-print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
-print(result["comparision_result"])
-"""
+
+#this block of code only executes if the python script is run directly
+#if imported it wont run
+if __name__ == "__main__":
+    result = agent.invoke({
+        "messages": [HumanMessage(content="What is the fiscal deficit target for FY 2026-27?")]
+    })
+    print(result["messages"][-1].content)
+    print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
+    print(result["context"])
+    print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
+    print(result["live_response"])
+    print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
+    print(result["comparision_result"])
+
 

@@ -68,7 +68,8 @@ curl -X POST http://127.0.0.1:8000/query \
 
 ## Progress so far
 
-- all 3 nodes are working — ChromaDB retrieval and Tavily live search are both returning results
-- the compare node is still empty — comparison logic and LLM not added yet
-- the query is hardcoded for now, later will be connected with FastAPI
-- Groq LLM is now added to the compare node to generate a final answer
+- all 3 nodes are working — ChromaDB retrieval, Tavily live search, and Groq comparison all returning results
+- the compare node uses Groq (llama-3.3-70b-versatile) to compare static vs live data and generate a final answer
+- FastAPI is now connected — the `/query` endpoint takes user input and calls the agent
+- the agent is imported into `query.py` and returns only `comparision_result` to the user
+- the direct invoke block in `agent.py` is wrapped in `if __name__ == "__main__"` so it doesn't run on import
