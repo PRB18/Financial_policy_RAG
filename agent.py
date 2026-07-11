@@ -103,7 +103,7 @@ agent = workflow.compile()
 print("Graph compiled successfully")
 
 result = agent.invoke({
-    "messages": [HumanMessage(content="What is the current repo rate?")]
+    "messages": [HumanMessage(content="What is the fiscal deficit target for FY 2026-27?")]
 })
 print(result["messages"][-1].content)
 print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")

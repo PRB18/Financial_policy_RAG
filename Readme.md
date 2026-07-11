@@ -17,6 +17,7 @@
 - **FastAPI + Uvicorn** — for the /query endpoint
 - **Tavily** — for live web search
 - **python-dotenv** — for loading API keys from .env file
+- **groq** — for llm
 
 ## project structure
 
@@ -62,7 +63,7 @@ curl -X POST http://127.0.0.1:8000/query \
 - it has 3 nodes
 - node1: retrieves data from ChromaDB
 - node2: searches the web live using Tavily
-- node3: compares the static storage and the live search results
+- node3: groq compares the static storage and the live search results
 - the graph is compiled and all 3 nodes run successfully
 
 ## Progress so far
@@ -70,4 +71,4 @@ curl -X POST http://127.0.0.1:8000/query \
 - all 3 nodes are working — ChromaDB retrieval and Tavily live search are both returning results
 - the compare node is still empty — comparison logic and LLM not added yet
 - the query is hardcoded for now, later will be connected with FastAPI
-- LLM will be added to the compare node to generate a final answer
+- Groq LLM is now added to the compare node to generate a final answer
