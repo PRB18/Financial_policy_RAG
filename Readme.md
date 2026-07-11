@@ -17,7 +17,7 @@
 - **FastAPI + Uvicorn** — for the /query endpoint
 - **Tavily** — for live web search
 - **python-dotenv** — for loading API keys from .env file
-- **groq** — for llm
+- **groq** — for llm to compare the static and live search results and generate a final answer
 
 ## project structure
 
