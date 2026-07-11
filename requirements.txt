@@ -9,3 +9,4 @@ langchain-core
 typing_extensions
 python-dotenv
 tavily-python
+groq
