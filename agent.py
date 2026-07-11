@@ -6,14 +6,16 @@ from chromaDB import collection
 import os
 from dotenv import load_dotenv
 from tavily import TavilyClient
+import anthropic
 
-load_dotenv("travily.env")
+load_dotenv("API.env")
 #this is the "state"
 #it stores messages list and context
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], "convorsation history", operator.add]
     context : list[str]
     live_response : list[dict]
+    comparision_result : str
 
 
 
@@ -53,7 +55,27 @@ def live_search(state: AgentState):
 #this node comapres the static data from the db with the live data
 def comaprision(state: AgentState):
     print("Comparing static and live data...")
-    return {}
+    anthropic_api = os.getenv("ANTHROPIC_API")
+    client = anthropic.Anthropic(api_key=anthropic_api)
+    message = client.messages.create(
+        model = "claude-3-5-sonnet-20240620",
+        max_tokens= 1024,
+        messages=[
+            {"role" : "user", "content" : f"""
+            You are a financial policy assistant. 
+            The user asked: {state['messages'][-1].content}
+
+            Here is the static official data from our database:
+            {state['context']}
+
+            Here is the live search data from the web:
+            {state['live_response']}
+
+            Compare the two. If the static data is outdated (like an old repo rate), explicitly flag the discrepancy and give the user the updated live web data.
+            """}
+        ]
+    )
+    return {"comparision_result": message.content[0].text}
 
 
 workflow = StateGraph(AgentState)
