@@ -1,6 +1,9 @@
+from langchain_core.messages import HumanMessage
 from fastapi import FastAPI, HTTPException , Path , status
 from typing import Optional
 from pydantic import BaseModel
+from agent import agent
+
 
 app=FastAPI()
 
@@ -14,4 +17,8 @@ def index():
 
 @app.post("/query")
 def query(question: Request):
-    return {"message": "this is where the query goes", "you_entered": question}
+    #the question entered by the user is sent to the graph to process
+    result = agent.invoke({"messages":[HumanMessage(content=question.query)]})
+    #the final answer is extracted from the graph and returned to the user
+    return {"answer": result["comparision_result"]}
+    

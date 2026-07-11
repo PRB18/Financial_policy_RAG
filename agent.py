@@ -55,8 +55,10 @@ def live_search(state: AgentState):
 #this node comapres the static data from the db with the live data
 def comaprision(state: AgentState):
     print("Comparing static and live data...")
+    #using groq api key
     groq_api = os.getenv("GROQ_API")
     client = Groq(api_key=groq_api)
+    #a clear prompt to the llm on what it should be doing
     prompt_text = f"""
     You are an expert Financial Policy RAG Agent.
     The user asked: "{state['messages'][-1].content}"
@@ -102,7 +104,7 @@ workflow.add_edge("compare", END)
 agent = workflow.compile()
 print("Graph compiled successfully")
 
-result = agent.invoke({
+"""result = agent.invoke({
     "messages": [HumanMessage(content="What is the fiscal deficit target for FY 2026-27?")]
 })
 print(result["messages"][-1].content)
@@ -112,5 +114,5 @@ print("-------------------------------------------------------------------------
 print(result["live_response"])
 print("---------------------------------------------------------------------------------------------------------------------------------------------------------------")
 print(result["comparision_result"])
-
+"""
 
