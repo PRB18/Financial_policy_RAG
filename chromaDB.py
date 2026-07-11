@@ -14,3 +14,11 @@ collection.upsert(
     documents= pages_list
 )
 
+#test data
+# Temporary test document with outdated repo rate
+'''collection.upsert(
+    ids=["test_outdated"],
+    documents=["The current RBI repo rate is 4.00% as of January 2022. The MPC has maintained this rate for the past 6 months."]
+)'''
+
+
